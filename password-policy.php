@@ -16,6 +16,7 @@ class NK_Password_Policy {
 	 */
 	public function __construct() {
 		add_filter( 'random_password', array( __CLASS__, 'random_password' ) );
+		add_action( 'retrieve_password', array( __CLASS__, 'retrieve_password') );
 	}
 
 	/**
@@ -34,6 +35,17 @@ class NK_Password_Policy {
 		$password = self::generate_password( $p_policy->GetPasswordLen(), $p_policy );
 
 		return $password;
+	}
+
+	/**
+	 *
+	 * Hook WP retrieve_password for generate key walid password for reset password
+	 * without password policy
+	 *
+	 * @param $user_login
+	 */
+	public static function retrieve_password($user_login) {
+		remove_filter('random_password', array( __CLASS__, 'random_password' ));
 	}
 
 	/**
